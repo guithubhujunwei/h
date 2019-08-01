@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.health.dao.CheckGroupDao">
+
+    <resultMap id="baseCheckGroupMap" type="CheckGroup">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+    </resultMap>
+    <resultMap id="checkGroupMap" type="CheckGroup" extends="baseCheckGroupMap">
+        <collection property="checkItems" javaType="ArrayList" ofType="CheckItem" column="id"
+                    select="com.itheima.health.dao.CheckItemDao.findCheckItemById"/>
+    </resultMap>
+
+    <select id="findCheckGroupById" resultMap="checkGroupMap">
+        SELECT * FROM t_checkgroup WHERE id IN (
+            SELECT checkgroup_id from t_setmeal_checkgroup WHERE setmeal_id = #{id}
+        )
+    </select>
+
+    <insert id="add" parameterType="CheckGroup">
+        INSERT INTO t_checkgroup
+        VALUES (null,#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <insert id="addCheckGroupAndCheckItem">
+        INSERT INTO t_checkgroup_checkitem
+        VALUES (#{checkgroup_id},#{checkitem_id})
+    </insert>
+    <update id="edit">
+        UPDATE t_checkgroup
+        set code = #{code},name = #{name},helpCode = #{helpCode},sex = #{sex},remark = #{remark},attention = #{attention}
+        where id = #{id}
+    </update>
+    <delete id="deleteCheckItemsListByIds">
+        DELETE FROM t_checkgroup_checkitem
+        WHERE checkgroup_id = #{id}
+    </delete>
+    <select id="selectByCondition" resultType="com.itheima.health.pojo.CheckGroup">
+        SELECT * FROM t_checkgroup
+        <if test=" queryString!=null and queryString.length > 0">
+            WHERE code LIKE CONCAT('%',#{queryString},'%')or name LIKE CONCAT('%',#{queryString},'%') or helpCode like CONCAT('%',#{queryString},'%')
+        </if>
+    </select>
+    <select id="findById" resultType="com.itheima.health.pojo.CheckGroup">
+        SELECT * FROM t_checkgroup WHERE id = #{id}
+    </select>
+    <select id="findCheckItemIdsByCheckGroupId" resultType="java.lang.Integer">
+        SELECT checkitem_id from t_checkgroup_checkitem
+        WHERE checkgroup_id = #{id}
+    </select>
+    <select id="findAll" resultType="com.itheima.health.pojo.CheckGroup">
+        SELECT * FROM t_checkgroup
+    </select>
+
+
+</mapper>

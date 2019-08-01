@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.health.dao.OrderSettingDao">
+
+    <insert id="add" parameterType="OrderSetting">
+        INSERT INTO t_ordersetting
+        VALUES (null,#{orderDate},#{number},#{reservations})
+    </insert>
+    <update id="updateOrderSettingByOrderDate" parameterType="OrderSetting">
+        UPDATE t_ordersetting
+        SET number = #{number},reservations = #{reservations}
+        where orderDate = #{orderDate}
+    </update>
+
+    <select id="countByOrderDate" resultType="long">
+      SELECT count(*) FROM t_ordersetting where orderDate = #{orderDate}
+    </select>
+    <select id="getOrderSettingByMonth" resultType="com.itheima.health.pojo.OrderSetting">
+        SELECT * from t_ordersetting WHERE orderDate BETWEEN #{dateBegin} and #{dateEnd}
+    </select>
+    <select id="findByOrderDate" resultType="com.itheima.health.pojo.OrderSetting">
+        SELECT * FROM t_ordersetting WHERE orderDate = #{orderDate}
+    </select>
+    <update id="editReservationsByOrderDate">
+        UPDATE t_ordersetting
+        SET reservations = #{reservations}
+        where orderDate = #{orderDate}
+    </update>
+
+</mapper>

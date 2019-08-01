@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.health.dao.SetmealDao">
+    <resultMap id="baseSetmealResultMap" type="Setmeal">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="price" property="price"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+        <result column="img" property="img"/>
+    </resultMap>
+    <resultMap id="setmealResultMap" type="Setmeal" extends="baseSetmealResultMap">
+        <collection property="checkGroups" javaType="ArrayList"
+                    ofType="CheckGroup"
+                    column="id"
+                    select="com.itheima.health.dao.CheckGroupDao.findCheckGroupById"
+        />
+    </resultMap>
+    <select id="findById" resultMap="setmealResultMap">
+        SELECT * FROM t_setmeal WHERE id = #{id}
+    </select>
+
+    <insert id="add" parameterType="Setmeal">
+        INSERT t_setmeal
+        VALUES (null, #{name}, #{code}, #{helpCode},#{sex},#{age},#{price}, #{remark}, #{attention}, #{img})
+        <selectKey resultType="integer" order="AFTER" keyProperty="id">
+            Select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <insert id="addSetmealAndCheckGroup">
+        INSERT into t_setmeal_checkgroup
+        VALUES (#{setmeal_id},#{checkgroup_id})
+      </insert>
+    <select id="selectByCondition" resultType="com.itheima.health.pojo.Setmeal">
+        SELECT * FROM t_setmeal
+        <if test=" queryString!=null and queryString.length > 0">
+            WHERE code LIKE CONCAT('%',#{queryString},'%')or name LIKE CONCAT('%',#{queryString},'%') or helpCode like CONCAT('%',#{queryString},'%')
+        </if>
+    </select>
+    <select id="findAll" resultType="com.itheima.health.pojo.Setmeal">
+        SELECT * FROM t_setmeal
+    </select>
+
+</mapper>
+        <!--
+          //(null,name = #{name},code = #{code},helpCode = #{helpCode},sex = #{sex},age= #{age},price=#{price},remark = #{remark},attention = #{attention},img = #{img})
+
+        -->

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>学习Pagination</h1></hr>
+      <!--
+    current-change：内置的事件，当前页码改变时会触发，可以获取到改变之后的页码
+    -->
+      <el-pagination
+          @current-change="handleCurrentChange"
+          current-page="1"
+          page-size="10"
+          layout="total, prev, pager, next, jumper"
+          :total="305">
+      </el-pagination>
+</div>
+</body>
+
+<script>
+  new Vue({
+    el: '#app',
+    methods:{
+      handleCurrentChange(page){
+        alert(page);
+      }
+    }
+  })
+</script>
+</html>

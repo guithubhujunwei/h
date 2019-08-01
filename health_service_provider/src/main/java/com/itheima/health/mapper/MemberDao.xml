@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.health.dao.MemberDao">
+    <insert id="add">
+        INSERT INTO t_member
+        VALUES (null,#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},
+        #{regTime},#{password},#{email},#{birthday},#{remark})
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <select id="findByTelephone" resultType="com.itheima.health.pojo.Member">
+        SELECT * from t_member WHERE phoneNumber = #{telephone}
+    </select>
+    <select id="findMemberCountBeforeDate" resultType="java.lang.Integer">
+        select count(*) from t_member WHERE regTime &lt;= #{date}
+    </select>
+    <select id="totalMemberCount" resultType="java.lang.Integer">
+        select count(*) from t_member
+    </select>
+    <select id="totalMemberCountByDate" resultType="java.lang.Integer">
+        select count(*) from t_member WHERE regTime = #{date}
+    </select>
+    <select id="totalMemberCountAfterDate" resultType="java.lang.Integer">
+         select count(*) from t_member WHERE regTime &gt;= #{date}
+    </select>
+</mapper>
